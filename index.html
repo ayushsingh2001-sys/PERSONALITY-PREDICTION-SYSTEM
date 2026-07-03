@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Prediction System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function showDefinition(trait) {
+            const defs = {
+                "openness": "Openness: Enjoys new experiences, imaginative, insightful.",
+                "neuroticism": "Neuroticism: Sensitive to stress, emotional, moody.",
+                "conscientiousness": "Conscientiousness: Organized, reliable, thorough.",
+                "agreeableness": "Agreeableness: Friendly, compassionate, cooperative.",
+                "extraversion": "Extraversion: Energetic, talkative, assertive."
+            };
+            document.getElementById("trait-definition").innerText = defs[trait] || "";
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Personality Prediction System</h1>
+
+        <form method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Applicant Name</label>
+                <input type="text" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" name="age" required>
+            </div>
+
+            <div class="form-group">
+                <label>Gender</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="gender" value="1" required> Male</label>
+                    <label><input type="radio" name="gender" value="0"> Female</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Upload Resume (.pdf / .docx)</label>
+                <input type="file" name="resume" accept=".pdf,.docx">
+            </div>
+
+            <div class="form-group">
+                <label>Openness (1-10)</label>
+                <input type="number" name="openness" min="1" max="10" required
+                       onfocus="showDefinition('openness')" onblur="showDefinition('')">
+            </div>
+
+            <div class="form-group">
+                <label>Neuroticism (1-10)</label>
+                <input type="number" name="neuroticism" min="1" max="10" required
+                       onfocus="showDefinition('neuroticism')" onblur="showDefinition('')">
+            </div>
+
+            <div class="form-group">
+                <label>Conscientiousness (1-10)</label>
+                <input type="number" name="conscientiousness" min="1" max="10" required
+                       onfocus="showDefinition('conscientiousness')" onblur="showDefinition('')">
+            </div>
+
+            <div class="form-group">
+                <label>Agreeableness (1-10)</label>
+                <input type="number" name="agreeableness" min="1" max="10" required
+                       onfocus="showDefinition('agreeableness')" onblur="showDefinition('')">
+            </div>
+
+            <div class="form-group">
+                <label>Extraversion (1-10)</label>
+                <input type="number" name="extraversion" min="1" max="10" required
+                       onfocus="showDefinition('extraversion')" onblur="showDefinition('')">
+            </div>
+
+            <p id="trait-definition" style="color:green; font-weight:bold; margin-bottom:20px;"></p>
+
+            <button type="submit" class="submit-btn">Predict Personality</button>
+        </form>
+
+        {% if result %}
+        <div class="result-card">
+            <h2>Predicted Personality Traits:</h2>
+            <ul>
+                {% for trait, word in result.items() %}
+                    <li><strong>{{ trait }}:</strong> {{ word }}</li>
+                {% endfor %}
+            </ul>
+
+            {% if resume_info %}
+            <h3>Resume Info:</h3>
+            <ul>
+                {% for key, val in resume_info.items() %}
+                    <li><strong>{{ key }}:</strong> {{ val }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
